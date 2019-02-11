@@ -19,7 +19,7 @@ namespace Samples
     /// </summary>
     public class Driver
     {
-        private const string PrimarySerialPortName = "COM12";
+        private const string PrimarySerialPortName = "COM3";
         private const string SecondarySerialPortName = "COM2";
 
         private static async Task<int> Main(string[] args)
@@ -32,7 +32,8 @@ namespace Samples
             {
                 //ModbusTcpMasterReadInputs();
                 //SimplePerfTest();
-                //ModbusSerialRtuMasterWriteRegisters();
+                ModbusSerialRtuMasterWriteRegisters();
+                //ModbusSerialAsciiMasterReadRegisters();
                 //ModbusSerialAsciiMasterReadRegisters();
                 //ModbusTcpMasterReadInputs();
                 //StartModbusAsciiSlave();
@@ -43,6 +44,7 @@ namespace Samples
                 //StartModbusAsciiSlave();
                 //await StartModbusSerialRtuSlaveNetwork(cts.Token);
                 await StartModbusSerialRtuSlaveWithCustomMessage(cts.Token);
+
             }
             catch (Exception e)
             {
@@ -65,7 +67,7 @@ namespace Samples
                 // configure serial port
                 port.BaudRate = 9600;
                 port.DataBits = 8;
-                port.Parity = Parity.None;
+                port.Parity = Parity.Even;
                 port.StopBits = StopBits.One;
                 port.Open();
 
@@ -76,8 +78,8 @@ namespace Samples
                 IModbusMaster master = factory.CreateRtuMaster(adapter);
 
                 byte slaveId = 1;
-                ushort startAddress = 100;
-                ushort[] registers = new ushort[] { 1, 2, 3 };
+                ushort startAddress = 1001;
+                ushort[] registers = new ushort[] { 1 };
 
                 // write three registers
                 master.WriteMultipleRegisters(slaveId, startAddress, registers);
@@ -343,7 +345,7 @@ namespace Samples
             using (SerialPort slavePort = new SerialPort(PrimarySerialPortName))
             {
                 // configure serial port
-                slavePort.BaudRate = 57600;
+                slavePort.BaudRate = 9600;
                 slavePort.DataBits = 8;
                 slavePort.Parity = Parity.Even;
                 slavePort.StopBits = StopBits.One;
